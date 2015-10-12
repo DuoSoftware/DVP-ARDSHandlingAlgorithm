@@ -2,6 +2,7 @@
     "RedisIp": "SYS_REDIS_HOST",
 	"RedisPort": "SYS_REDIS_PORT",
 	"RedisDb": "SYS_REDIS_DB",
-	"ResourceCSlotUrl":"SYS_SERVICE_RCS",
-	"Port":"HOST_ARDSHANDLINGALGO_PORT"
+	"Port":"HOST_ARDSHANDLINGALGORITHM_PORT",
+	"ArdsServiceHost":"SYS_ARDSSERVICE_HOST",
+	"ArdsServicePort":"SYS_ARDSSERVICE_PORT"
 }

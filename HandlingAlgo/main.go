@@ -8,19 +8,21 @@ import (
 )
 
 type Configuration struct {
-	RedisIp          string
-	RedisDb          int
-	ResourceCSlotUrl string
-	RedisPort        string
-	Port             string
+	RedisIp         string
+	RedisPort       string
+	RedisDb         int
+	Port            string
+	ArdsServiceHost string
+	ArdsServicePort string
 }
 
 type EnvConfiguration struct {
-	RedisIp          string
-	RedisDb          string
-	ResourceCSlotUrl string
-	RedisPort        string
-	Port             string
+	RedisIp         string
+	RedisPort       string
+	RedisDb         string
+	Port            string
+	ArdsServiceHost string
+	ArdsServicePort string
 }
 
 type AttributeData struct {

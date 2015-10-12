@@ -8,7 +8,6 @@ import (
 	"github.com/fzzy/radix/redis"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"strings"
 	"time"
 )
@@ -33,23 +32,8 @@ func (handlingAlgo HandlingAlgo) SingleResource(ReqClass, ReqType, ReqCategory, 
 
 }
 
-func GetResourceCSlotUrl() string {
-	var resourceUrl string
-	file, _ := os.Open("conf.json")
-	decoder := json.NewDecoder(file)
-	configuration := Configuration{}
-	err := decoder.Decode(&configuration)
-	if err != nil {
-		fmt.Println("error:", err)
-		resourceUrl = "http://localhost:2225/resource/cs/update"
-	} else {
-		resourceUrl = configuration.ResourceCSlotUrl
-	}
-	return resourceUrl
-}
-
 func ReserveSlot(slotInfo CSlotInfo) bool {
-	url := GetResourceCSlotUrl()
+	url := fmt.Sprintf("http://%s:%s/DVP/API/1.0.0.0/ARDS/resource/%s/concurrencyslot", ardsServiceHost, ardsServicePort, slotInfo.ResourceId)
 	fmt.Println("URL:>", url)
 
 	slotInfoJson, _ := json.Marshal(slotInfo)

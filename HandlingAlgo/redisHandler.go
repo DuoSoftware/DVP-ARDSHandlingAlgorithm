@@ -13,9 +13,10 @@ import (
 var dirPath string
 var redisIp string
 var redisDb int
-var resCsUrl string
 var redisPort string
 var port string
+var ardsServiceHost string
+var ardsServicePort string
 
 func errHndlr(err error) {
 	if err != nil {
@@ -48,7 +49,8 @@ func GetDefaultConfig() Configuration {
 		defconfiguration.RedisIp = "127.0.0.1"
 		defconfiguration.RedisPort = "6379"
 		defconfiguration.RedisDb = 6
-		defconfiguration.ResourceCSlotUrl = "http://localhost:2225/DVP/API/1.0.0.0/ARDS/resource"
+		defconfiguration.ArdsServiceHost = "localhost"
+		defconfiguration.ArdsServicePort = "2225"
 		defconfiguration.Port = "2226"
 	}
 
@@ -56,31 +58,14 @@ func GetDefaultConfig() Configuration {
 }
 
 func LoadDefaultConfig() {
-	confPath := filepath.Join(dirPath, "conf.json")
-	fmt.Println("LoadDefaultConfig config path: ", confPath)
+	defconfiguration := GetDefaultConfig()
 
-	content, operr := ioutil.ReadFile(confPath)
-	if operr != nil {
-		fmt.Println(operr)
-	}
-
-	defconfiguration := Configuration{}
-	deferr := json.Unmarshal(content, &defconfiguration)
-
-	if deferr != nil {
-		fmt.Println("error:", deferr)
-		redisIp = "127.0.0.1:6379"
-		redisPort = "6379"
-		redisDb = 6
-		resCsUrl = "http://localhost:2225/DVP/API/1.0.0.0/ARDS/resource"
-		port = "2226"
-	} else {
-		redisIp = fmt.Sprintf("%s:%s", defconfiguration.RedisIp, defconfiguration.RedisPort)
-		redisPort = defconfiguration.RedisPort
-		redisDb = defconfiguration.RedisDb
-		resCsUrl = defconfiguration.ResourceCSlotUrl
-		port = defconfiguration.Port
-	}
+	redisIp = fmt.Sprintf("%s:%s", defconfiguration.RedisIp, defconfiguration.RedisPort)
+	redisPort = defconfiguration.RedisPort
+	redisDb = defconfiguration.RedisDb
+	port = defconfiguration.Port
+	ardsServiceHost = defconfiguration.ArdsServiceHost
+	ardsServicePort = defconfiguration.ArdsServicePort
 }
 
 func InitiateRedis() {
@@ -102,11 +87,13 @@ func InitiateRedis() {
 	} else {
 		var converr error
 		defConfig := GetDefaultConfig()
+
 		redisIp = os.Getenv(envconfiguration.RedisIp)
 		redisPort = os.Getenv(envconfiguration.RedisPort)
 		redisDb, converr = strconv.Atoi(os.Getenv(envconfiguration.RedisDb))
-		resCsUrl = os.Getenv(envconfiguration.ResourceCSlotUrl)
 		port = os.Getenv(envconfiguration.Port)
+		ardsServiceHost = os.Getenv(envconfiguration.ArdsServiceHost)
+		ardsServicePort = os.Getenv(envconfiguration.ArdsServicePort)
 
 		if redisIp == "" {
 			redisIp = defConfig.RedisIp
@@ -117,8 +104,11 @@ func InitiateRedis() {
 		if redisDb == 0 || converr != nil {
 			redisDb = defConfig.RedisDb
 		}
-		if resCsUrl == "" {
-			resCsUrl = defConfig.ResourceCSlotUrl
+		if ardsServiceHost == "" {
+			ardsServiceHost = defConfig.ArdsServiceHost
+		}
+		if ardsServicePort == "" {
+			ardsServicePort = defConfig.ArdsServicePort
 		}
 		if port == "" {
 			port = defConfig.Port
@@ -129,7 +119,6 @@ func InitiateRedis() {
 
 	fmt.Println("RedisIp:", redisIp)
 	fmt.Println("RedisDb:", redisDb)
-	fmt.Println("ResCsUrl:", resCsUrl)
 
 }
 
