@@ -2,9 +2,9 @@ package main
 
 import (
 	"bytes"
-	"code.google.com/p/gorest"
 	"encoding/json"
 	"fmt"
+	"github.com/DuoSoftware/gorest"
 	"github.com/fzzy/radix/redis"
 	"io/ioutil"
 	"net/http"
